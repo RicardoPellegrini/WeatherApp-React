@@ -1,11 +1,80 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+
+const api = {
+  key: '444ee12849d3443bf3e20e031a0adb1f',
+  base: 'https://api.openweathermap.org/data/2.5/'
+}
 
 function App() {
+
+  const [query, setQuery] = useState('')
+  const [weather, setWeather] = useState({})
+
+  function search(evt) {
+    if (evt.key === 'Enter'){
+      fetch(`${api.base}weather?q=${query}&units=metric&appid=${api.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setWeather(result)
+          setQuery('')
+        })
+    }
+  }
+
+  function dateBuilder(d){
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    let day = days[d.getDay()]
+    let date = d.getDate()
+    let month = months[d.getMonth()]
+    let year = d.getFullYear()
+
+    return `${day}, ${date} ${month} of ${year}`
+  }
+
+  function handleImageClass(){
+    if(typeof weather.main !== "undefined"){
+      switch(weather.weather[0].main){
+        case 'Clouds': return 'app clouds';
+        case 'Thunderstorm': return 'app thunderstorm';
+        case 'Drizzle': return 'app drizzle';
+        case 'Rain': return 'app rain';
+        case 'Snow': return 'app snow';
+        default: return 'app';
+      }
+    } else{
+      return 'app';
+    } 
+  }
+
   return (
-    <div className="App">
-      
+    <div className={handleImageClass()}>
+      <main>
+        <div className="search-box">
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Search..."
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyPress={search} 
+          />
+        </div>
+        {(typeof weather.main != "undefined") ? (
+          <div>
+            <div className="location-box">
+              <div className="location">{weather.name}, {weather.sys.country}</div>
+              <div className="date">{dateBuilder(new Date())}</div>
+            </div>
+            <div className="weather-box">
+              <div className="temperature">{Math.round(weather.main.temp)}°C</div>
+              <div className="weather">{weather.weather[0].main}</div>
+            </div>
+          </div>
+        ) : ('')}
+        
+      </main>
     </div>
   );
 }
