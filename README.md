@@ -2,11 +2,11 @@
 ---
 
 <h1><img src="public/app.gif"></h1>
----
 
 ## About
 
 The "weather app" project was reproduced for educational purposes, with the main goal of improving concepts from the React library and API connection. For this project, we use the [openweathermap](https://openweathermap.org/) API, where we can obtain basic data about the climate in a city in the search moment.
+
 ---
 
 ## Technologies used
